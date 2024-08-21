@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculator {
+      background-color: #212121;
+      padding: 20px;
+      border-radius: 10px;
+      width: 320px;
+    }
+    .display {
+      background-color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: right;
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+    }
+    .button {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 24px;
+      text-align: center;
+      cursor: pointer;
+      color: #fff;
+    }
+    .button.operator {
+      background-color: #f57f17;
+    }
+    .button.equals {
+      background-color: #00c853;
+      grid-column: span 2;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .results ul {
+      list-style: none;
+      padding: 0;
+    }
+    .results li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .results li span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display"></div>
+    <div class="buttons">
+      <div class="button" onclick="handleButtonClick('7')">7</div>
+      <div class="button" onclick="handleButtonClick('8')">8</div>
+      <div class="button" onclick="handleButtonClick('9')">9</div>
+      <div class="button operator" onclick="handleButtonClick('/')">/</div>
+
+      <div class="button" onclick="handleButtonClick('4')">4</div>
+      <div class="button" onclick="handleButtonClick('5')">5</div>
+      <div class="button" onclick="handleButtonClick('6')">6</div>
+      <div class="button operator" onclick="handleButtonClick('*')">*</div>
+
+      <div class="button" onclick="handleButtonClick('1')">1</div>
+      <div class="button" onclick="handleButtonClick('2')">2</div>
+      <div class="button" onclick="handleButtonClick('3')">3</div>
+      <div class="button operator" onclick="handleButtonClick('-')">-</div>
+
+      <div class="button" onclick="handleButtonClick('0')">0</div>
+      <div class="button" onclick="handleButtonClick('.')">.</div>
+      <div class="button equals" onclick="handleEquals()">=</div>
+      <div class="button operator" onclick="handleButtonClick('+')">+</div>
+
+      <div class="button" style="grid-column: span 4; background-color: #d32f2f;" onclick="handleClear()">Limpiar</div>
+    </div>
+    <div class="results">
+      <button onclick="toggleResults()">Mostrar resultados</button>
+      <ul id="resultsList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let currentValue = '';
+    let results = [];
+    let showResults = false;
+
+    function handleButtonClick(value) {
+      currentValue += value;
+      updateDisplay();
+    }
+
+    function handleClear() {
+      currentValue = '';
+      updateDisplay();
+    }
+
+    function handleEquals() {
+      try {
+        const result = eval(currentValue);
+        const newResult = {
+          value: result.toString(),
+          date: new Date().toLocaleString(),
+          expression: currentValue
+        };
+        results.push(newResult);
+        currentValue = result.toString();
+        updateDisplay();
+        updateResults();
+      } catch (e) {
+        alert('Error en la expresión');
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById('display').innerText = currentValue;
+    }
+
+    function updateResults() {
+      const resultsList = document.getElementById('resultsList');
+      resultsList.innerHTML = '';
+      results.forEach((result) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${result.expression}</span> = ${result.value} (${result.date})`;
+        resultsList.appendChild(li);
+      });
+    }
+
+    function toggleResults() {
+      showResults = !showResults;
+      document.getElementById('resultsList').style.display = showResults ? 'block' : 'none';
+    }
+
+    // Inicializar el display
+    updateDisplay();
+  </script>
+</body>
+</html>
